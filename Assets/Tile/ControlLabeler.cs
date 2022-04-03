@@ -10,18 +10,21 @@ public class ControlLabeler : MonoBehaviour
 {
     [SerializeField] Color deafaultColor = Color.white; 
     [SerializeField] Color disableColor = Color.gray;
+    [SerializeField] Color exploredColor = Color.yellow; 
+    [SerializeField] Color pathColor = new Color(1f, 0.5f, 0f);
     Vector2Int coordinates = new Vector2Int();
     TextMeshPro label;
-    Waypoint waypoint;
+    GridManager gridManager;
+    
     void Awake() 
     {
         label = GetComponent<TextMeshPro>();
         label.enabled = true;
-        waypoint = GetComponentInParent<Waypoint>();
         DsiaplyCordinates();
     }
     void Update()
     {
+        gridManager = FindObjectOfType<GridManager>();
         UpdateObjectName();
         SetLabelColor();
         if(Input.GetKeyDown(KeyCode.G))
@@ -35,9 +38,24 @@ public class ControlLabeler : MonoBehaviour
     }
     void SetLabelColor()
     {
-        if(waypoint.IsPlaceable)
+        
+        if(gridManager == null) {return;}
+
+        Node node = gridManager.GetNode(coordinates);
+
+        if(node == null) {return;}
+        
+        if(!node.isWalkable)
         {
-            label.color = deafaultColor;
+            label.color = disableColor;
+        }
+        else if (node.isPath)
+        {
+            label.color = pathColor;
+        }
+        else if (node.isExplored)
+        {
+            label.color = exploredColor;
         }
         else
         {
