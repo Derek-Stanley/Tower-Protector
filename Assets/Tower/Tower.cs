@@ -1,0 +1,31 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Tower : MonoBehaviour
+{
+    [SerializeField] int cost = 75;
+    public bool CreateTower(Tower tower, Vector3 position)
+    {
+        Bank bank = FindObjectOfType<Bank>();
+        if(bank == null)            //Check if bank there
+        {
+            return false;
+        }
+        else
+        {
+            if(bank.CurrentBalance >= cost)         //Check if balance there        
+            {
+                Instantiate(tower.gameObject, position, Quaternion.identity);
+                bank.WithDraw(cost);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+        
+    }
+}
